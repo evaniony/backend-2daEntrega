@@ -1,12 +1,17 @@
 import  express  from "express";
 export const routerProducts = express.Router();
-import { ProductManager } from "../ProductManager.js";
-import fs from "fs";
+import { productModel } from "../DAO/models/product.model.js";
+//import { ProductManager } from "../ProductManager.js";
+//import fs from "fs";
 
 
-const productManager = new ProductManager('product.json');
 
 
+
+
+//const productManager = new ProductManager('product.json');
+
+/* 
 routerProducts.get("/", async (req, res)=>{
     const limit = req.query.limit;
     const products = await productManager.getProducts();
@@ -95,4 +100,4 @@ routerProducts.delete("/:pid", async (req, res)=>{
              data: {}
             });
     }
-})
+}) */
