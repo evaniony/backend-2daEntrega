@@ -10,19 +10,26 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded( {extended: true} ));
 
-app.use("/products", routerProducts);
-app.use("/carts", routerCart);
 
 connectMongo();
 
+/* app.engine("handlebars", handlebars.engine());
+app.set("views", __dirname + "/views");
+app.set("view engine", "handlebars"); */
 app.engine("handlebars", handlebars.engine());
 app.set("views", __dirname + "/views");
 app.set("view engine", "handlebars");
 
 
+app.use(express.static(__dirname + "/public"));
+
 app.listen(8080, () =>{
     console.log("port is on 8080!");
 });
+
+app.use("/products", routerProducts);
+app.use("/carts", routerCart);
+
 
 app.use("*", (req, res)=>{
     res.status(400).send(
