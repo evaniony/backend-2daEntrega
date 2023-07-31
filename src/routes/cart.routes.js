@@ -1,11 +1,37 @@
 import express from "express";
 export const routerCart = express.Router();
-import { ProductManager } from "../ProductManager.js";
-import { CartManager } from "../CartManager.js";
+import { cartModel } from "../DAO/models/cart.model.js";
 
-const cartManager = new CartManager('cart.json');
+/* DELETE api/carts/:cid/products/:pid
+ deberá eliminar del carrito el producto seleccionado. */
 
-routerCart.post("/", async (req, res)=>{
+routerCart.get("/:cid/products/:pid", async (req, res) =>{
+    let carrito = await cartModel.find().populate("products.product");
+    //cid --- toma referencia el carrito
+    //pid: --- referencia del producto;
+    const { cid, pid }  = req.params;
+    console.log(cid);
+    console.log(pid);
+    //teniendo como primer parametro, en este el carrito
+    //hacer un filtrado en el carrito que, obtenga el id del prod
+    //a borrar. finalmente se actualiza el carrito.
+
+    
+    const findCart = await cartModel.findOne({_id: cid});
+    const filtrado = findCart.products.filter(product => product.product == pid);
+    console.log(filtrado);
+    //findCart.products.deleteOne()
+    let authCart = await cartModel.updateOne({_id: cid}, findCart);
+    console.log(authCart);
+
+    return res.status(200).json(
+            {status: "ok!",
+            msg: "encontramos algo",
+            data: cid, pid});
+    //console.log(pid);
+});
+
+/* routerCart.post("/", async (req, res)=>{
     const {idCart} = req.body;
     const createProd = await cartManager.createCart(idCart);
 
@@ -62,4 +88,4 @@ routerCart.post("/:cid/products/:pid", async (req, res) =>{
          data: {}
         });
     }
-})
+}) */
