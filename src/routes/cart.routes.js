@@ -5,8 +5,9 @@ import { cartModel } from "../DAO/models/cart.model.js";
 /* DELETE api/carts/:cid/products/:pid
  deberá eliminar del carrito el producto seleccionado. */
 
+ //Y NO ES GET - ES DELETE
 routerCart.get("/:cid/products/:pid", async (req, res) =>{
-    let carrito = await cartModel.find().populate("products.product");
+    await cartModel.find().populate("products.product");
     //cid --- toma referencia el carrito
     //pid: --- referencia del producto;
     const { cid, pid }  = req.params;
@@ -31,6 +32,66 @@ routerCart.get("/:cid/products/:pid", async (req, res) =>{
     //console.log(pid);
 });
 
+
+/* PUT api/carts/:cid
+ deberá pisar el carrito con un arreglo de productos NUEVO 
+ con el formato especificado arriba. */
+
+//actualizar
+routerCart.put("/:cid", async(req, res) =>{
+    //quiero tomar por req.params el id del carrito que ya se genero
+    //actualizar el carrito, cambiar de id, pero que mantenga los productos;
+
+    try{
+    //tomar los parametros
+    const { cid } = req.params;
+    const prodToAdd = req.body;
+    
+    //PRIMERO HAY QUE VALIDAR SI EXISTE ESE _ID
+    let authCart = await cartModel.findOne({ _id: cid });
+    //validar
+    if (!authCart) {
+        return res.status(404).json(
+            {status: "error",
+             msg: "Carrito no encontrado" });
+      };
+
+
+      const prodStandby =  cartModel.insertMany({
+        products: authCart.products, 
+        // Conserva los productos del carrito anterior
+      });
+      //prodStandby.products.push(prodToAdd); 
+      await cartModel.deleteOne({_id: cid});
+
+    return res.status(200).json({
+      status: "ok",
+      msg: "Se creó un nuevo carrito, conservo los productos",
+      data: prodStandby, // Devuelve la lista de productos en el nuevo carrito
+    });
+  } catch (error) {
+    console.error("Error creando un nuevo carrito:", error);
+    return res.status(500).json(
+        { status: "error",
+         msg: "Error interno del servidor" });
+  }
+
+
+
+
+
+
+
+
+   /*  const newCart = await cartModel.insertMany([{product}]);
+    let authCart = await cartModel.updateOne({_id: cid}, newCart); */
+
+    return res.status(200).json(
+        {status: "ok!",
+        msg: "Se actualizo tu carrito;",
+        data: product.docs});
+
+})
 /* routerCart.post("/", async (req, res)=>{
     const {idCart} = req.body;
     const createProd = await cartManager.createCart(idCart);
