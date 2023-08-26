@@ -6,29 +6,52 @@ import { cartModel } from "../DAO/models/cart.model.js";
  deberá eliminar del carrito el producto seleccionado. */
 
  //Y NO ES GET - ES DELETE
-routerCart.get("/:cid/products/:pid", async (req, res) =>{
-    await cartModel.find().populate("products.product");
+
+
+ routerCart.get("/:cid", async (req, res) =>{
+    const { cid }  = req.params;
+    const findCart = await cartModel.findOne({_id: cid});
+
+    return res.status(200).json(
+        {status: "ok!",
+        msg: "encontramos algo",
+        data: findCart
+    });
+
+});
+
+routerCart.delete("/:cid/products/:pid", async (req, res) =>{
+    //await cartModel.find().populate("products.product");
     //cid --- toma referencia el carrito
     //pid: --- referencia del producto;
+    console.log(req.params);
     const { cid, pid }  = req.params;
-    console.log(cid);
-    console.log(pid);
+    //console.log(cid);
+    //console.log(pid);
     //teniendo como primer parametro, en este el carrito
     //hacer un filtrado en el carrito que, obtenga el id del prod
     //a borrar. finalmente se actualiza el carrito.
 
     
     const findCart = await cartModel.findOne({_id: cid});
-    const filtrado = findCart.products.filter(product => product.product == pid);
-    console.log(filtrado);
+    //console.log(findCart);
+    //const filtrado = findCart.products.filter(product => {console.log(typeof(product.product._id)); !product.product._id == pid});
+    const filter = { _id: cid };
+    const update = {$pull: {product:{_id: pid }}};
+    const result = await cartModel.updateOne(filter, update);
+
+    //console.log(filtrado);
     //findCart.products.deleteOne()
-    let authCart = await cartModel.updateOne({_id: cid}, findCart);
-    console.log(authCart);
+    //let authCart = await cartModel.updateOne({_id: cid}, findCart);
+    //console.log(authCart);
 
     return res.status(200).json(
             {status: "ok!",
             msg: "encontramos algo",
-            data: cid, pid});
+            data: cid, pid,
+            msg: cid});
+
+            
     //console.log(pid);
 });
 
@@ -39,10 +62,12 @@ routerCart.get("/:cid/products/:pid", async (req, res) =>{
 
 //actualizar
 routerCart.put("/:cid", async(req, res) =>{
+
+});
     //quiero tomar por req.params el id del carrito que ya se genero
     //actualizar el carrito, cambiar de id, pero que mantenga los productos;
 
-    try{
+    /* try{
     //tomar los parametros
     const { cid } = req.params;
     const prodToAdd = req.body;
@@ -75,7 +100,7 @@ routerCart.put("/:cid", async(req, res) =>{
         { status: "error",
          msg: "Error interno del servidor" });
   }
-
+ */
 
 
 
@@ -86,12 +111,12 @@ routerCart.put("/:cid", async(req, res) =>{
    /*  const newCart = await cartModel.insertMany([{product}]);
     let authCart = await cartModel.updateOne({_id: cid}, newCart); */
 
-    return res.status(200).json(
+ /*    return res.status(200).json(
         {status: "ok!",
         msg: "Se actualizo tu carrito;",
         data: product.docs});
 
-})
+}) */
 /* routerCart.post("/", async (req, res)=>{
     const {idCart} = req.body;
     const createProd = await cartManager.createCart(idCart);
