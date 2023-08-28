@@ -8,12 +8,12 @@ export async function connectMongo() {
     );
 
 
-   /*  //await cartModel.insertMany([{product: []}]);
-    let cart = await cartModel.findOne({ _id: '64c707b113a2dfb7eafa7bbd'});
+   /*  //await cartModel.insertMany([{product: []}]); */
+   /*  let cart = await cartModel.findOne({ _id: '64ca679de7681a7250107a5a'});
     //cart.products.push({ product: '64bfac870fe851eeb1c159cd' });
     cart.products.push({ product: '64bfac870fe851eeb1c159cc' });
     cart.products.push({ product: '64bfac870fe851eeb1c159cf' });
-    let res = await cartModel.updateOne({_id: '64c707b113a2dfb7eafa7bbd'}, cart); */
+    let res = await cartModel.updateOne({_id: '64ca679de7681a7250107a5a'}, cart); 
 /*     await productModel.insertMany([
       {title: "Taza", description: "Taza de ceramica", price: 2500, thumbnail: "taza.jpg", code: 1001, category: "bazar", stock: 10},
       {title: "Plato", description: "Plato de ceramica", price: 1500, thumbnail: "articulo-2.jpg", code: 2001, category: "bazar", stock: 10},
